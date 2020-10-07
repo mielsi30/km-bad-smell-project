@@ -4,7 +4,6 @@ import types
 
 def main():
 
-
     file = open("tree.py", "r")
     text = file.read()
     tree = ast.parse(source=text)
@@ -12,9 +11,10 @@ def main():
     analyzer = Analyzer()
     analyzer.visit(tree)
 
+    testOntology()
+
 
 def buildOntology(self, node):
-
     onto = get_ontology("file://tree.owl")
 
     with onto:
@@ -35,7 +35,40 @@ def buildOntology(self, node):
                 else:
                     types.new_class(element.s, (DataProperty,))
 
-    onto.save()
+    onto.save(format="rdfxml")
+
+def testOntology():
+    onto = get_ontology("file://tree.owl").load()
+    print("Testing Class Declaration")
+
+    cd = onto["ClassDeclaration"]
+    assert cd.name == "ClassDeclaration"
+    assert len(cd.is_a) == 1
+    assert cd.is_a[0].name == "TypeDeclaration"
+
+    constructor_decl = onto["ConstructorDeclaration"]
+    assert constructor_decl.name == "ConstructorDeclaration"
+    assert len(constructor_decl.is_a) == 2
+    assert constructor_decl.is_a[0].name == "Declaration"
+    assert constructor_decl.is_a[1].name == "Documented"
+
+    field_decl = onto["FieldDeclaration"]
+    assert field_decl.name == "FieldDeclaration"
+    assert len(field_decl.is_a) == 2
+    assert field_decl.is_a[0].name == "Member"
+    assert field_decl.is_a[1].name == "Declaration"
+
+    method_decl = onto["MethodDeclaration"]
+    assert method_decl.name == "MethodDeclaration"
+    assert len(method_decl.is_a) == 2
+    assert method_decl.is_a[0].name == "Member"
+    assert method_decl.is_a[1].name == "Declaration"
+
+    if_stmt = onto["IfStatement"]
+    assert if_stmt.name == "IfStatement"
+    assert len(if_stmt.is_a) == 1
+    assert if_stmt.is_a[0].name == "Statement"
+
 
 class Analyzer(ast.NodeVisitor):
 
