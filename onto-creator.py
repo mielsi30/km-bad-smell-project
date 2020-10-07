@@ -37,6 +37,18 @@ def buildOntology(self, node):
 
     onto.save(format="rdfxml")
 
+
+class Analyzer(ast.NodeVisitor):
+
+    def generic_visit(self, node):
+        ast.NodeVisitor.generic_visit(self, node)
+        buildOntology(self, node)
+
+
+if __name__ == "__main__":
+    main()
+
+
 def testOntology():
     onto = get_ontology("file://tree.owl").load()
     print("Testing Class Declaration")
@@ -68,14 +80,3 @@ def testOntology():
     assert if_stmt.name == "IfStatement"
     assert len(if_stmt.is_a) == 1
     assert if_stmt.is_a[0].name == "Statement"
-
-
-class Analyzer(ast.NodeVisitor):
-
-    def generic_visit(self, node):
-        ast.NodeVisitor.generic_visit(self, node)
-        buildOntology(self, node)
-
-
-if __name__ == "__main__":
-    main()
