@@ -8,3 +8,9 @@ Brenda Ruiz
 
 2. To test the ontology created:
 ``$ pytest onto-creator.py``
+
+3. To create individuals in the ontology:
+``$ pytest individ_creator.py``
+
+4. To test the individuals creation:
+``$ pytest individ_creator.py``
