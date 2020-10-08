@@ -3,8 +3,6 @@ import javalang
 import os
 
 
-
-
 def populate_ontology(onto, tree):
     process_tree(tree, onto)
     onto.save(format="rdfxml")
@@ -58,6 +56,7 @@ def testIndividualCreation():
     populate_ontology(onto, tree)
     instances = onto['ClassDeclaration'].instances()
 
+    # Find the instance of class A in the ontology
     findingA = [x for x in instances if x.jname[0] == 'A']
     a = findingA[0]
 
