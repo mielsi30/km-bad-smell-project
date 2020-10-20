@@ -2,7 +2,7 @@
 ### Course: Knowledge Management and Analysis
 Brenda Ruiz
 
-#### Instructions to run the project
+#### Instructions to run and test the project
 1. To create an ontology:
 ``$ python3 onto_creator.py``
 
