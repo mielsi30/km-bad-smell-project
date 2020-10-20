@@ -11,8 +11,6 @@ def main():
     analyzer = Analyzer()
     analyzer.visit(tree)
 
-    testOntology()
-
 
 def buildOntology(self, node):
     onto = get_ontology("file://tree.owl")
@@ -39,7 +37,6 @@ def buildOntology(self, node):
 
 def testOntology():
     onto = get_ontology("file://tree.owl").load()
-    print("Testing ontology creation")
 
     cd = onto["ClassDeclaration"]
     assert cd.name == "ClassDeclaration"
