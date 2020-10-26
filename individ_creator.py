@@ -40,7 +40,7 @@ def create_member(onto, cd, member):
 
 
 def create_method(onto, cd, member):
-    method_def = onto['MethodDeclaration']()
+    method_def = onto[member.__class__.__name__]()
     method_def.jname = [member.name]
     create_statement(onto, method_def, member)
     create_parameters(onto, method_def, member)
