@@ -10,10 +10,10 @@ def populate_ontology(onto, tree):
 def get_files():
     # Gets all Java files from the source directory
     java_files = []
-    for path, dirs, files in os.walk('android-chess/app/src/main/java/jwtc/chess/'):
-        for f in files:
-            if f.endswith(".java"):
-                java_files.append(os.path.join(path, f))
+    android_chess = 'android-chess/app/src/main/java/jwtc/chess/'
+    for file in os.listdir(android_chess):
+            if file.endswith(".java"):
+                java_files.append(os.path.join(android_chess, file))
     return java_files
 
 def read_file(file_path):
@@ -63,6 +63,7 @@ def create_statement(onto, method_def, member):
 def create_parameters(onto, method_def, member):
     for _, statement in member.parameters:
         fp = onto['FormalParameter']()
+        fp.jname = [statement[0][0].name]
         method_def.parameters.append(fp)
 
 
@@ -117,6 +118,30 @@ def testIfStatement(setup_ontology):
     populate_ontology(onto, tree)
     a = onto['ClassDeclaration'].instances()[0]
     assert a.body[0].body[0].is_a[0].name == 'IfStatement'
+
+def testWhileStatement(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse("class A { int f() {"
+                                "int i = 0; int b = 5; "
+                                "while(i < b){ i++; }"
+                                "} }")
+    populate_ontology(onto, tree)
+    a = onto['ClassDeclaration'].instances()[0]
+    assert a.body[0].body[0].is_a[0].name == 'WhileStatement'
+
+def testMethodParameters(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse("class A { int f(int a, boolean b) {"
+                                "return a; "
+                                "} }")
+    populate_ontology(onto, tree)
+    a = onto['ClassDeclaration'].instances()[0]
+
+    assert a.body[0].parameters[0].is_a[0].name == 'FormalParameter'
+    assert a.body[0].parameters[1].is_a[0].name == 'FormalParameter'
+    assert a.body[0].parameters[0].jname[0] == 'a'
+    assert a.body[0].parameters[1].jname[0] == 'b'
+
 
 
 onto = owlready2.get_ontology("file://tree.owl").load()
