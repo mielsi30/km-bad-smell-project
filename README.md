@@ -2,7 +2,7 @@
 ### Course: Knowledge Management and Analysis
 Brenda Ruiz
 
-#### Instructions to run the project
+#### Instructions to run and test the project
 1. To create an ontology:
 ``$ python3 onto_creator.py``
 
@@ -10,7 +10,7 @@ Brenda Ruiz
 ``$ pytest onto-creator.py``
 
 3. To create individuals in the ontology:
-``$ pytest individ_creator.py``
+``$ python3 individ_creator.py``
 
 4. To test the individuals creation:
-``$ pytest individ_creator.py``
+``$ pytest -s individ_creator.py``
