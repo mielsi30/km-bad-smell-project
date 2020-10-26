@@ -129,6 +129,15 @@ def testWhileStatement(setup_ontology):
     a = onto['ClassDeclaration'].instances()[0]
     assert a.body[0].body[0].is_a[0].name == 'WhileStatement'
 
+def testBlockStatement(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse("class A { int f() {"
+                                " { int i = 0; int b = 5; } return 0;"
+                                "} }")
+    populate_ontology(onto, tree)
+    a = onto['ClassDeclaration'].instances()[0]
+    assert a.body[0].body[0].is_a[0].name == 'BlockStatement'
+
 def testMethodParameters(setup_ontology):
     onto = setup_ontology
     tree = javalang.parse.parse("class A { int f(int a, boolean b) {"
@@ -143,7 +152,7 @@ def testMethodParameters(setup_ontology):
     assert a.body[0].parameters[1].jname[0] == 'b'
 
 
-
+# comment for testing
 onto = owlready2.get_ontology("file://tree.owl").load()
 files = get_files()
 for file in files:
