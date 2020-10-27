@@ -42,7 +42,7 @@ def long_methods(g):
         out.write("Class: " + row.cn + " Method: " + row.mn + " " + row.tot + " statements\n")
 
     out.close()
-    print("LENGTH = " , len(methods))
+    print("Length = " , len(methods))
     return methods
 
 def long_constructors(g):
@@ -94,7 +94,7 @@ def run_query(query, g):
     )
     return g.query(q)
 
-detect_bad_smells()
+# detect_bad_smells()
 
 # tests not done yet
 @pytest.fixture
@@ -104,10 +104,11 @@ def setup_ontology():
 
 
 def test_long_method(setup_ontology):
+    # first create a test ontology with  python3 onto_creator.py "file://testing.owl"
     onto = setup_ontology
-    tree = javalang.parse.parse("class A { int f(int x) { x++;x++;x++;x++;x++;x++;x++;x++;x++;x++; x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;}}")
+    tree = javalang.parse.parse("class A { int f(int x) { x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;}}")
     individ_creator.populate_ontology(onto, tree)
     onto.save(file="testing.owl", format="rdfxml")
-    get_ontology("file://testing.owl").load()
-    g = default_world.as_rdflib_graph()
+    g = rdflib.Graph()
+    g.load("testing.owl")
     long_methods(g)
