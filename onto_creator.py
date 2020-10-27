@@ -1,9 +1,12 @@
 from owlready2 import *
 import ast
 import types
+import sys
+
+file_path = sys.argv[1]
+print("Creating ontology: " , file_path)
 
 def main():
-
     file = open("tree.py", "r")
     text = file.read()
     tree = ast.parse(source=text)
@@ -12,8 +15,8 @@ def main():
     analyzer.visit(tree)
 
 
-def buildOntology(self, node):
-    onto = get_ontology("file://tree.owl")
+def buildOntology(self, node, file_path):
+    onto = get_ontology(file_path)
 
     with onto:
         if type(node) == ast.ClassDef:
@@ -71,7 +74,7 @@ class Analyzer(ast.NodeVisitor):
 
     def generic_visit(self, node):
         ast.NodeVisitor.generic_visit(self, node)
-        buildOntology(self, node)
+        buildOntology(self, node, file_path)
 
 
 if __name__ == "__main__":
