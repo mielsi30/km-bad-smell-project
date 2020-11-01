@@ -3,21 +3,23 @@ import ast
 import types
 import sys
 
-file_path = sys.argv[1]
-print("Creating ontology: " , file_path)
+file_name = sys.argv[1]
+print("Creating ontology: ", file_name)
 
 def main():
     file = open("tree.py", "r")
     text = file.read()
     tree = ast.parse(source=text)
 
-    analyzer = Analyzer()
+    onto = get_ontology("http://test.org/onto.owl")
+    analyzer = Analyzer(onto)
     analyzer.visit(tree)
+    onto.save(file = file_name, format="rdfxml")
+    print("Ontology %s saved" % file_name)
 
 
-def buildOntology(self, node, file_path):
-    onto = get_ontology(file_path)
-
+def buildOntology(self, node):
+    onto = self.onto
     with onto:
         if type(node) == ast.ClassDef:
             for base in node.bases:
@@ -35,8 +37,6 @@ def buildOntology(self, node, file_path):
                     types.new_class("jname", (DataProperty, ))
                 else:
                     types.new_class(element.s, (DataProperty,))
-
-    onto.save(format="rdfxml")
 
 def testOntology():
     onto = get_ontology("file://tree.owl").load()
@@ -72,9 +72,12 @@ def testOntology():
 
 class Analyzer(ast.NodeVisitor):
 
+    def __init__(self, onto):
+        self.onto = onto
+
     def generic_visit(self, node):
         ast.NodeVisitor.generic_visit(self, node)
-        buildOntology(self, node, file_path)
+        buildOntology(self, node)
 
 
 if __name__ == "__main__":

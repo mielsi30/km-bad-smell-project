@@ -1,20 +1,20 @@
 import javalang
 import rdflib.plugins.sparql as sq
-import rdflib
 from owlready2 import *
 from pathlib import Path
 import pytest
 import individ_creator
-from onto_creator import *
 
 
+def main():
+    file_name = sys.argv[1]
+    print("Detecting bad smells for ontology %s" % file_name)
+    detect_bad_smells(file_name)
 
 output_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output/queries/")
 
-def detect_bad_smells():
-    print("Detecting bad smells")
-
-    get_ontology("file://tree2.owl").load()
+def detect_bad_smells(file_name):
+    get_ontology("file://" + file_name).load()
     Path(output_path).mkdir(parents=True, exist_ok=True)
     graph = default_world.as_rdflib_graph()
     long_methods(g=graph)
@@ -32,11 +32,12 @@ def long_methods(g):
                 ?m tree:body ?s .
                 ?s a/rdfs:subClassOf* tree:Statement .
             } GROUP BY ?m
-            HAVING (COUNT(?s) >= 20)
+            HAVING (COUNT(?s) >= 10)
         """, g)
 
     out = open(output_path + "longMethod.txt", "w")
     out.write("Long Methods:\n\n")
+
     for row in methods:
         print(row)
         out.write("Class: " + row.cn + " Method: " + row.mn + " " + row.tot + " statements\n")
@@ -94,21 +95,35 @@ def run_query(query, g):
     )
     return g.query(q)
 
-# detect_bad_smells()
-
 # tests not done yet
 @pytest.fixture
 def setup_ontology():
     onto = owlready2.get_ontology("file://testing.owl").load()
     yield onto
+    for e in onto['ClassDeclaration'].instances():
+        print("deleting", e)
+        destroy_entity(e)
+
+    for m in onto['Declaration'].instances():
+        print("deleting", m)
+        destroy_entity(m)
+
+    for f in onto['Statement'].instances():
+        print("deleting", f)
+        destroy_entity(f)
+
+    onto.save(format="rdfxml")
 
 
 def test_long_method(setup_ontology):
-    # first create a test ontology with  python3 onto_creator.py "file://testing.owl"
+    # first create a test ontology with  python3 onto_creator.py "testing.owl"
     onto = setup_ontology
     tree = javalang.parse.parse("class A { int f(int x) { x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;}}")
     individ_creator.populate_ontology(onto, tree)
     onto.save(file="testing.owl", format="rdfxml")
-    g = rdflib.Graph()
-    g.load("testing.owl")
-    long_methods(g)
+    get_ontology("file://testing.owl").load()
+    graph = default_world.as_rdflib_graph()
+    long_methods(g=graph)
+
+if __name__ == "__main__":
+    main()

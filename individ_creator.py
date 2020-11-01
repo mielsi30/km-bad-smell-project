@@ -3,6 +3,15 @@ import javalang
 import pytest
 import os
 
+def main():
+    file_name = sys.argv[1]
+    print("Populating ontology: ", file_name)
+    onto = owlready2.get_ontology("file://" + file_name).load()
+    files = get_files()
+    for file in files:
+        tree = read_file(file)
+        populate_ontology(onto, tree)
+    onto.save(file_name, format="rdfxml")
 
 def populate_ontology(onto, tree):
     process_tree(tree, onto)
@@ -32,11 +41,11 @@ def process_tree(tree, onto):
 
 
 def create_member(onto, cd, member):
-    if type(member) == javalang.tree.MethodDeclaration or type(member) == javalang.tree.ConstructorDeclaration:
-        create_method(onto, cd, member)
-
-    elif type(member) == javalang.tree.FieldDeclaration:
+    if type(member) == javalang.tree.FieldDeclaration:
         create_field(onto, cd, member)
+
+    elif type(member) == javalang.tree.MethodDeclaration or type(member) == javalang.tree.ConstructorDeclaration:
+        create_method(onto, cd, member)
 
 
 def create_method(onto, cd, member):
@@ -152,11 +161,6 @@ def testMethodParameters(setup_ontology):
     assert a.body[0].parameters[1].jname[0] == 'b'
 
 
-# comment for testing
-onto = owlready2.get_ontology("file://tree.owl").load()
-files = get_files()
-for file in files:
-    tree = read_file(file)
-    populate_ontology(onto, tree)
-onto.save(format="rdfxml")
+if __name__ == "__main__":
+    main()
 
