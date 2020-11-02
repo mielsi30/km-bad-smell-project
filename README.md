@@ -16,4 +16,4 @@ Brenda Ruiz
 ``$ pytest -s individ_creator.py``
 
 5. To detect bad smells:
-``$ python3 bad_smells.py``
+``$ python3 bad_smells.py <name_of_file>``
