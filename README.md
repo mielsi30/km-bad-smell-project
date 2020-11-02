@@ -10,7 +10,7 @@ Brenda Ruiz
 ``$ pytest onto_creator.py``
 
 3. To create individuals in the ontology:
-``$ python3 individ_creator.py``
+``$ python3 individ_creator.py <name_of_file>``
 
 4. To test the individuals creation:
 ``$ pytest -s individ_creator.py``
