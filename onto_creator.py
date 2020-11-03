@@ -11,7 +11,7 @@ def main():
     text = file.read()
     tree = ast.parse(source=text)
 
-    onto = get_ontology("http://test.org/onto.owl")
+    onto = get_ontology("http://my.onto.org/tree.owl")
     analyzer = Analyzer(onto)
     analyzer.visit(tree)
     onto.save(file = file_name, format="rdfxml")
