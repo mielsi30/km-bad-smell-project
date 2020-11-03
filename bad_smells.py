@@ -4,6 +4,7 @@ from owlready2 import *
 from pathlib import Path
 import pytest
 import individ_creator
+from bad_smells_test_definitions import *
 
 
 def main():
@@ -49,6 +50,7 @@ def long_methods(g):
     for row in methods:
         out.write("Class: " + row.cn + " Method: " + row.mn + " " + row.tot + " statements\n")
     out.close()
+    return methods
 
 def long_constructors(g):
     print("2. Looking for long constructors")
@@ -71,6 +73,7 @@ def long_constructors(g):
     for row in constructors:
         out.write("Class: " + row.cn + "  Constructor: " + row.con + row.tot + " statements\n")
     out.close()
+    return constructors
 
 def large_classes(g):
     print("3. Looking for large classes")
@@ -90,8 +93,8 @@ def large_classes(g):
     out.write("Total: " + str(len(classes)) + "\n")
     for row in classes:
         out.write("Class: " + row.cn + " " + row.tot + " methods\n")
-
     out.close()
+    return classes
 
 def method_with_switch(g):
     print("4. Looking for methods with switch statements")
@@ -113,8 +116,8 @@ def method_with_switch(g):
     out.write("Total: " + str(len(methods)) + "\n")
     for row in methods:
         out.write("Method: " + row.mn + " " + row.tot + " statements\n")
-
     out.close()
+    return methods
 
 def constructor_with_switch(g):
     print("5. Looking for constructors with switch statements")
@@ -135,9 +138,9 @@ def constructor_with_switch(g):
     out.write("\nConstructors with Switch:\n\n")
     out.write("Total: " + str(len(methods)) + "\n")
     for row in methods:
-        out.write("Constructors: " + row.mn + " " + row.tot + " statements\n")
-
+        out.write("Constructors: " + row.con + " " + row.tot + " statements\n")
     out.close()
+    return methods
 
 def constructor_long_parameter_list(g):
     print("6. Looking for constructors with long parameter list")
@@ -158,9 +161,9 @@ def constructor_long_parameter_list(g):
     out.write("\nConstructors with Long Parameter List:\n\n")
     out.write("Total: " + str(len(constructors)) + "\n")
     for row in constructors:
-        out.write("Constructors: " + row.mn + " " + row.tot + " parameters\n")
-
+        out.write("Constructors: " + row.con + " " + row.tot + " parameters\n")
     out.close()
+    return constructors
 
 def method_long_parameter_list(g):
     print("7. Looking for methods with long parameter list")
@@ -182,13 +185,11 @@ def method_long_parameter_list(g):
     out.write("Total: " + str(len(methods)) + "\n")
     for row in methods:
         out.write("Method: " + row.mn + " " + row.tot + " parameters\n")
-
     out.close()
-
-
+    return methods
 
 def data_class(g):
-    print("7. Looking for data classes")
+    print("8. Looking for data classes")
     class_methods = run_query(
         """SELECT ?mn ?cn (COUNT(*)AS ?tot) WHERE {
                 ?c a tree:ClassDeclaration .
@@ -218,9 +219,8 @@ def data_class(g):
             if method.cn == row.cn and row.tot == method.tot:
                 out.write("Total: " + row.tot + "\n")
                 out.write("Class: " + row.cn)
-
-
     out.close()
+    return setters_getters
 
 def run_query(query, g):
     q = sq.prepareQuery(
@@ -230,10 +230,9 @@ def run_query(query, g):
     return g.query(q)
 
 
-# TODO: finish tests
 @pytest.fixture
 def setup_ontology():
-    onto = owlready2.get_ontology("file://testing.owl").load()
+    onto = get_ontology("file://testing.owl").load()
     yield onto
     for e in onto['ClassDeclaration'].instances():
         print("deleting", e)
@@ -247,18 +246,83 @@ def setup_ontology():
         print("deleting", f)
         destroy_entity(f)
 
-    onto.save(format="rdfxml")
+    onto.save("testing.owl", format="rdfxml")
 
 
 def test_long_method(setup_ontology):
-    # first create a test ontology with python3 onto_creator.py testing.owl
     onto = setup_ontology
-    tree = javalang.parse.parse("class A { int f(int x) { x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;x++;}}")
+    tree = javalang.parse.parse(LONG_METHOD)
     individ_creator.populate_ontology(onto, tree)
-    onto.save(file="testing.owl", format="rdfxml")
+    onto.save("testing.owl", format="rdfxml")
     get_ontology("file://testing.owl").load()
     graph = default_world.as_rdflib_graph()
-    long_methods(g=graph)
+    assert len(long_methods(g=graph)) == 1
+
+def test_long_constructor(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse(LONG_CONSTRUCTOR)
+    individ_creator.populate_ontology(onto, tree)
+    onto.save("testing.owl", format="rdfxml")
+    get_ontology("file://testing.owl").load()
+    graph = default_world.as_rdflib_graph()
+    assert len(long_constructors(g=graph)) == 1
+
+def test_data_class(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse(DATA_CLASS)
+    individ_creator.populate_ontology(onto, tree)
+    onto.save("testing.owl", format="rdfxml")
+    get_ontology("file://testing.owl").load()
+    graph = default_world.as_rdflib_graph()
+    assert len(data_class(g=graph)) == 1
+
+def test_large_class(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse(LARGE_CLASS)
+    individ_creator.populate_ontology(onto, tree)
+    onto.save("testing.owl", format="rdfxml")
+    get_ontology("file://testing.owl").load()
+    graph = default_world.as_rdflib_graph()
+    assert len(large_classes(g=graph)) == 1
+
+def test_method_with_switch(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse(METHOD_WITH_SWITCH)
+    individ_creator.populate_ontology(onto, tree)
+    onto.save("testing.owl", format="rdfxml")
+    get_ontology("file://testing.owl").load()
+    graph = default_world.as_rdflib_graph()
+    assert len(method_with_switch(g=graph)) == 1
+
+
+def test_constructor_with_switch(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse(CONSTRUCTOR_WITH_SWITCH)
+    individ_creator.populate_ontology(onto, tree)
+    onto.save("testing.owl", format="rdfxml")
+    get_ontology("file://testing.owl").load()
+    graph = default_world.as_rdflib_graph()
+    assert len(constructor_with_switch(g=graph)) == 1
+
+def test_method_long_parameter_list(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse(METHOD_LONG_PARAMETER_LIST)
+    individ_creator.populate_ontology(onto, tree)
+    onto.save("testing.owl", format="rdfxml")
+    get_ontology("file://testing.owl").load()
+    graph = default_world.as_rdflib_graph()
+    assert len(method_long_parameter_list(g=graph)) == 1
+
+def test_constructors_long_parameter_list(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse(CONSTRUCTOR_LONG_PARAMETER_LIST)
+    individ_creator.populate_ontology(onto, tree)
+    onto.save("testing.owl", format="rdfxml")
+    get_ontology("file://testing.owl").load()
+    graph = default_world.as_rdflib_graph()
+    assert len(constructor_long_parameter_list(g=graph)) == 1
+
+
 
 if __name__ == "__main__":
     main()
