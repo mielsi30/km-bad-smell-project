@@ -21,3 +21,6 @@ Brenda Ruiz
 
 5. To detect bad smells:
 ``$ python3 bad_smells.py <name_of_file>``
+
+5. To test the bad smells detection:
+``$ pytest -s bad_smells.py``
