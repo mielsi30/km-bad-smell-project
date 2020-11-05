@@ -7,6 +7,10 @@ Brenda Ruiz
 ``$ python3 onto_creator.py <name_of_file>``
 
 2. To test the ontology created:
+    - First create a test ontology by running: 
+    ````$ python3 onto_creator.py testing.owl ```` <br />
+     This ontology will be used by the other tests.
+    - Then run the tests with: 
 ``$ pytest onto_creator.py``
 
 3. To create individuals in the ontology:
