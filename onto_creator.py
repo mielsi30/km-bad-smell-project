@@ -39,7 +39,7 @@ def buildOntology(self, node):
                     types.new_class(element.s, (DataProperty,))
 
 def testOntology():
-    onto = get_ontology("file://tree.owl").load()
+    onto = get_ontology("file://testing.owl").load()
 
     cd = onto["ClassDeclaration"]
     assert cd.name == "ClassDeclaration"

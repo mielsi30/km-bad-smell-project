@@ -78,7 +78,8 @@ def create_parameters(onto, method_def, member):
 
 @pytest.fixture
 def setup_ontology():
-    onto = owlready2.get_ontology("file://tree.owl").load()
+    print("Testing ontology: testing.owl")
+    onto = owlready2.get_ontology("file://testing.owl").load()
     yield onto
     for e in onto['ClassDeclaration'].instances():
         print("deleting", e)
@@ -96,7 +97,7 @@ def setup_ontology():
         print("deleting", f)
         destroy_entity(f)
 
-    onto.save(format="rdfxml")
+    onto.save("testing.owl", format="rdfxml")
 
 
 def testIndividualCreation(setup_ontology):
