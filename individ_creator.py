@@ -78,7 +78,6 @@ def create_parameters(onto, method_def, member):
 
 @pytest.fixture
 def setup_ontology():
-    print("Testing ontology: testing.owl")
     onto = owlready2.get_ontology("file://testing.owl").load()
     yield onto
     for e in onto['ClassDeclaration'].instances():
@@ -100,7 +99,7 @@ def setup_ontology():
     onto.save("testing.owl", format="rdfxml")
 
 
-def testIndividualCreation(setup_ontology):
+def testFieldDeclaration(setup_ontology):
     onto = setup_ontology
     tree = javalang.parse.parse("class A { int x, y; }")
     populate_ontology(onto, tree)
@@ -110,6 +109,28 @@ def testIndividualCreation(setup_ontology):
     assert a.body[1].is_a[0].name == 'FieldDeclaration'
     assert a.body[0].jname[0] == 'x'
     assert a.body[1].jname[0] == 'y'
+
+def testMethodDeclaration(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse("class A { int m1() { return 0; } }")
+    populate_ontology(onto, tree)
+    a = onto['ClassDeclaration'].instances()[0]
+
+    assert a.body[0].is_a[0].name == 'MethodDeclaration'
+    assert a.body[0].jname[0] == 'm1'
+
+def testMethodParameters(setup_ontology):
+    onto = setup_ontology
+    tree = javalang.parse.parse("class A { int f(int a, boolean b) {"
+                                "return a; "
+                                "} }")
+    populate_ontology(onto, tree)
+    a = onto['ClassDeclaration'].instances()[0]
+
+    assert a.body[0].parameters[0].is_a[0].name == 'FormalParameter'
+    assert a.body[0].parameters[1].is_a[0].name == 'FormalParameter'
+    assert a.body[0].parameters[0].jname[0] == 'a'
+    assert a.body[0].parameters[1].jname[0] == 'b'
 
 def testReturnStatement(setup_ontology):
     onto = setup_ontology
@@ -147,19 +168,6 @@ def testBlockStatement(setup_ontology):
     populate_ontology(onto, tree)
     a = onto['ClassDeclaration'].instances()[0]
     assert a.body[0].body[0].is_a[0].name == 'BlockStatement'
-
-def testMethodParameters(setup_ontology):
-    onto = setup_ontology
-    tree = javalang.parse.parse("class A { int f(int a, boolean b) {"
-                                "return a; "
-                                "} }")
-    populate_ontology(onto, tree)
-    a = onto['ClassDeclaration'].instances()[0]
-
-    assert a.body[0].parameters[0].is_a[0].name == 'FormalParameter'
-    assert a.body[0].parameters[1].is_a[0].name == 'FormalParameter'
-    assert a.body[0].parameters[0].jname[0] == 'a'
-    assert a.body[0].parameters[1].jname[0] == 'b'
 
 
 if __name__ == "__main__":
