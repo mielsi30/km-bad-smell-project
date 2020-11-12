@@ -25,115 +25,15 @@ Class: Move 21 methods
 
 Methods with Switch:
 
-Total: 108
-Method: onCreate 24 statements
-Method: query 128 statements
-Method: getType 32 statements
-Method: insert 248 statements
-Method: delete 64 statements
-Method: update 64 statements
-Method: onCreate 24 statements
-Method: onUpgrade 24 statements
-Method: onCreate 16 statements
-Method: query 200 statements
-Method: getType 48 statements
-Method: insert 160 statements
-Method: delete 96 statements
-Method: update 48 statements
-Method: onCreate 8 statements
-Method: onUpgrade 24 statements
-Method: loadDB 80 statements
-Method: setOpeningDb 8 statements
-Method: getOpeningDbFileName 8 statements
-Method: enableControl 8 statements
-Method: disableControl 8 statements
-Method: isActive 8 statements
-Method: resetTimer 56 statements
-Method: switchTimer 80 statements
-Method: setClockTotal 8 statements
-Method: pauzeTimer 64 statements
-Method: continueTimer 40 statements
-Method: pauseOrContinueTimer 56 statements
-Method: getWhiteRemainClock 8 statements
-Method: getBlackRemainClock 8 statements
-Method: move 56 statements
-Method: newGame 72 statements
-Method: initFEN 120 statements
-Method: newGameRandomFischer 88 statements
-Method: undo 8 statements
-Method: stopThreadAndUndo 72 statements
-Method: play 80 statements
-Method: getJNI 8 statements
-Method: getUCI 8 statements
-Method: getArrPGNSize 8 statements
-Method: jumptoMove 104 statements
-Method: loadPGNHead 208 statements
-Method: removeComment 152 statements
-Method: removeDoubleSpaces 32 statements
-Method: loadPGNMoves 768 statements
-Method: checkIsLegalMove 56 statements
-Method: requestMove 88 statements
-Method: requestMove 608 statements
-Method: loadPGN 24 statements
-Method: addPGNEntry 24 statements
-Method: wasMovePlayed 48 statements
-Method: getFromOfNextMove 32 statements
-Method: setAnnotation 16 statements
-Method: exportFullPGN 64 statements
-Method: exportMovesPGN 8 statements
-Method: exportMovesPGNFromPly 112 statements
-Method: getPGNEntries 8 statements
-Method: getLevel 8 statements
-Method: getLevelMode 8 statements
-Method: getLevelPly 8 statements
-Method: setLevelMode 8 statements
-Method: setLevel 8 statements
-Method: setLevelPly 8 statements
-Method: getUCIDatabase 8 statements
-Method: getPlayMode 8 statements
-Method: updateState 8 statements
-Method: OnDestroy 16 statements
-Method: setPGNHeadProperty 8 statements
-Method: getPGNHeadProperty 8 statements
-Method: getWhite 8 statements
-Method: getBlack 8 statements
-Method: setDateLong 16 statements
-Method: getDate 208 statements
-Method: setWeights4Test 88 statements
-Method: newGame 280 statements
-Method: initFEN 704 statements
-Method: isPosFree 8 statements
-Method: getAvailableCol 72 statements
-Method: getFirstAvailableCol 64 statements
-Method: initRandomFisher 696 statements
-Method: makeMove 8 statements
-Method: makeMoveFirstPawn 8 statements
-Method: makeMoveHit 8 statements
-Method: makeMoveEP 8 statements
-Method: makeMoveOO 8 statements
-Method: makeMoveOOO 8 statements
-Method: makeMovePromotion 8 statements
-Method: setCheck 8 statements
-Method: equalPositions 8 statements
-Method: equalTos 8 statements
-Method: getFrom 8 statements
-Method: getTo 8 statements
-Method: isEP 8 statements
-Method: isOO 8 statements
-Method: isOOO 8 statements
-Method: isHIT 8 statements
-Method: isCheck 8 statements
-Method: isFirstPawnMove 8 statements
-Method: isPromotionMove 8 statements
-Method: getPromotionPiece 8 statements
-Method: toDbgString 40 statements
-Method: fromString 16 statements
-Method: fromColAndRow 8 statements
-Method: row 8 statements
-Method: col 8 statements
-Method: toString 8 statements
-Method: rowToString 8 statements
-Method: colToString 8 statements
+Total: 8
+Class: PGNProvider Method: query 1 statements
+Class: PGNProvider Method: getType 1 statements
+Class: PGNProvider Method: delete 1 statements
+Class: PGNProvider Method: update 1 statements
+Class: ChessPuzzleProvider Method: query 1 statements
+Class: ChessPuzzleProvider Method: getType 1 statements
+Class: ChessPuzzleProvider Method: delete 1 statements
+Class: ChessPuzzleProvider Method: update 1 statements
 
 Constructors with Switch:
 
@@ -146,10 +46,10 @@ Total: 0
 Methods with Long Parameter List:
 
 Total: 4
-Method: query 5 parameters
-Method: query 5 parameters
-Method: addPGNEntry 5 parameters
-Method: setCastlingsEPAnd50 6 parameters
+Class: PGNProvider Method: query 5 parameters
+Class: ChessPuzzleProvider Method: query 5 parameters
+Class: GameControl Method: addPGNEntry 5 parameters
+Class: JNI Method: setCastlingsEPAnd50 6 parameters
 
 Data Classes:
 
