@@ -105,7 +105,7 @@ def method_with_switch(g):
                 ?c tree:body ?m .
                 ?m a tree:MethodDeclaration .
                 ?m tree:jname ?mn .
-                ?m tree:body ?s .
+                ?m tree:body ?sw .
                 ?sw a tree:SwitchStatement .
             } GROUP BY ?m
             HAVING (COUNT(?sw) >= 1)
@@ -115,7 +115,7 @@ def method_with_switch(g):
     out.write("\nMethods with Switch:\n\n")
     out.write("Total: " + str(len(methods)) + "\n")
     for row in methods:
-        out.write("Method: " + row.mn + " " + row.tot + " statements\n")
+        out.write("Class: " + row.cn + " Method: " + row.mn + " " + row.tot + " statements\n")
     out.close()
     return methods
 
@@ -138,7 +138,7 @@ def constructor_with_switch(g):
     out.write("\nConstructors with Switch:\n\n")
     out.write("Total: " + str(len(methods)) + "\n")
     for row in methods:
-        out.write("Constructors: " + row.con + " " + row.tot + " statements\n")
+        out.write("Class: " + row.cn + " Constructor: " + row.con + " " + row.tot + " statements\n")
     out.close()
     return methods
 
@@ -161,7 +161,7 @@ def constructor_long_parameter_list(g):
     out.write("\nConstructors with Long Parameter List:\n\n")
     out.write("Total: " + str(len(constructors)) + "\n")
     for row in constructors:
-        out.write("Constructors: " + row.con + " " + row.tot + " parameters\n")
+        out.write("Class: " + row.cn + "Constructor: " + row.con + " " + row.tot + " parameters\n")
     out.close()
     return constructors
 
@@ -184,7 +184,7 @@ def method_long_parameter_list(g):
     out.write("\nMethods with Long Parameter List:\n\n")
     out.write("Total: " + str(len(methods)) + "\n")
     for row in methods:
-        out.write("Method: " + row.mn + " " + row.tot + " parameters\n")
+        out.write("Class: " + row.cn + " Method: " + row.mn + " " + row.tot + " parameters\n")
     out.close()
     return methods
 
