@@ -1,5 +1,5 @@
 ## Project 1: Bad Smells
-### Course: Knowledge Management and Analysis
+### Course: Knowledge Analysis and Management
 Brenda Ruiz
 
 #### Instructions to run and test the project
